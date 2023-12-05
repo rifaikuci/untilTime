@@ -1,5 +1,9 @@
 *.java linguist-detectable=false
 *.rb linguist-detectable=false
+*.ruby linguist-detectable=false
+*.js linguist-detectable=true
+*.tsx linguist-detectable=true
+
 # Vendored dependencies
 - third[-_]?party/
 - 3rd[-_]?party/
