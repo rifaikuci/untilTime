@@ -1,2 +1,7 @@
 *.java linguist-detectable=false
 *.rb linguist-detectable=false
+# Vendored dependencies
+- third[-_]?party/
+- 3rd[-_]?party/
+- vendors?/
+- extern(al)?/
