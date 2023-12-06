@@ -6,25 +6,34 @@
  */
 
 import React from 'react';
-import {
-  SafeAreaView,
-  Text, View
-} from "react-native";
+
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from '@react-navigation/native';
+import { Home } from "./src";
 
 
 
 
 
+
+const Stack = createStackNavigator();
 
 
 function App() {
 
   return (
-    <SafeAreaView>
-      <Text>
-        asdas
-      </Text>
-    </SafeAreaView>
+    <NavigationContainer >
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false
+        }}
+        initialRouteName={'Home'}
+      >
+        <Stack.Screen name="Home" component={Home}/>
+
+      </Stack.Navigator>
+    </NavigationContainer>
+
   );
 }
 

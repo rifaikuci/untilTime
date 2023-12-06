@@ -7,6 +7,6 @@
 # Vendored dependencies
 - third[-_]?party/
 - 3rd[-_]?party/
-- vendors?/
+- ios/vendors?/
 - extern(al)?/
 - ios?/
