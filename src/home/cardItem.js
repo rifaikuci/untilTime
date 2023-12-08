@@ -1,19 +1,18 @@
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import style from "./style";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { timeConvertSecond } from "../../util/helper";
 import Icon from "react-native-vector-icons/Entypo";
 import { COLORS } from "../../constants/theme";
+import ItemSettingsModal from "./itemSettingsModal";
 
-const CardItem = ({ itemTimer, itemDescription }) => {
+const CardItem = ({ item }) => {
 
 
-  const [timer, setTimer] = useState(itemTimer ? itemTimer : "00:00:00");
+  const [timer, setTimer] = useState(item.itemTimer ? item.itemTimer : "00:00:00");
 
   useEffect(() => {
     let totalSeconds = timeConvertSecond(timer);
-
-    console.log(totalSeconds, "dena");
     const intervalId = setInterval(() => {
       totalSeconds++;
       const hours = Math.floor(totalSeconds / 3600);
@@ -28,22 +27,29 @@ const CardItem = ({ itemTimer, itemDescription }) => {
     return () => clearInterval(intervalId);
   }, []);
 
+  const [isModalVisible, setModalVisible] = useState(false);
 
   return (
 
     <View style={style.cardItemContainer}>
 
+      <ItemSettingsModal
+        isModalVisible={isModalVisible}
+        setModalVisible={setModalVisible}
+        item={item}
+      />
+
       <View style={style.cardItemContentTopBar}>
 
         <View style={style.cardItemContentTopDesc}>
           <Text style={style.cardItemContentTopText}>
-            {itemDescription}
+            {item.itemDescription}
           </Text>
         </View>
 
-        <View style={style.cardItemContentTopIcon}>
+        <TouchableOpacity style={style.cardItemContentTopIcon} onPress={() => setModalVisible(true)}>
           <Icon name="dots-three-vertical" size={20} color={COLORS.secondary} />
-        </View>
+        </TouchableOpacity>
       </View>
 
       <View style={style.cardItemTimerView}>
@@ -53,12 +59,8 @@ const CardItem = ({ itemTimer, itemDescription }) => {
       </View>
 
       <View style={{
-        marginBottom: 20,
-        alignItems: "center",
-        flexDirection: "row",
-        justifyContent: "center",
+        marginBottom: 20, alignItems: "center", flexDirection: "row", justifyContent: "center",
       }}>
-
 
         <Icon name="controller-play" size={30} color={COLORS.secondary} />
         <Icon name="controller-stop" size={30} color={COLORS.secondary} />
@@ -68,8 +70,7 @@ const CardItem = ({ itemTimer, itemDescription }) => {
       </View>
 
 
-    </View>
-  );
+    </View>);
 };
 
 export default CardItem;

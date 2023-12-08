@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { SafeAreaView, ScrollView, Text, View } from "react-native";
 
 import style from "./style";
@@ -46,7 +46,7 @@ const Index = () => {
             {
               cardList.map((x,index )=> {
                 return (
-                  <CardItem itemTimer={x.itemTimer} itemDescription={x.itemDescription} key={index}  />
+                  <CardItem item={x} key={index}  />
                 )
               })
             }
