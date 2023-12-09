@@ -111,6 +111,17 @@ export default StyleSheet.create({
     color: COLORS.lightGray2,
     fontSize: 15,
     fontWeight: "500"
+  },
+
+  iconContainer : {
+    marginBottom: 20,
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+
+  iconItem: {
+    marginHorizontal: 20
   }
 
 

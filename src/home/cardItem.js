@@ -1,33 +1,60 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import style from "./style";
-import React, { useEffect, useState } from "react";
-import { timeConvertSecond } from "../../util/helper";
+import React, { useEffect, useRef, useState } from "react";
+import { showTimer, timeConvertSecond } from "../../util/helper";
 import Icon from "react-native-vector-icons/Entypo";
 import { COLORS } from "../../constants/theme";
 import ItemSettingsModal from "./itemSettingsModal";
 
+
 const CardItem = ({ item }) => {
 
 
-  const [timer, setTimer] = useState(item.itemTimer ? item.itemTimer : "00:00:00");
+  const [timer, setTimer] = useState(item.totalSeconds ? item.totalSeconds : "0");
+  const timerString = useRef( item.totalSeconds ? showTimer(item.totalSeconds) : showTimer(0));
+  const [active, setActive] = useState(item.active);
 
   useEffect(() => {
-    let totalSeconds = timeConvertSecond(timer);
-    const intervalId = setInterval(() => {
-      totalSeconds++;
-      const hours = Math.floor(totalSeconds / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
 
-      const formattedTimer = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    if (active) {
 
-      setTimer(formattedTimer);
-    }, 1000);
+      let totalSeconds = timer;
+      const intervalId = setInterval(() => {
+          totalSeconds++;
+          setTimer(totalSeconds)
+          const formattedTimer = showTimer(totalSeconds);
+          timerString.current = formattedTimer;
 
-    return () => clearInterval(intervalId);
-  }, []);
+      }, 1000);
+
+      return () => clearInterval(intervalId);
+    }
+
+  }, [active]);
 
   const [isModalVisible, setModalVisible] = useState(false);
+
+  // type kısmıda gönderilecek.
+  const handlePlay = () => {
+      setActive(true)
+      console.log("play")
+  }
+
+  const handlePause = () => {
+    setActive(false)
+    console.log("pause")
+  }
+
+  const handleSave = () => {
+    setActive(false)
+    console.log("save")
+  }
+
+  const handleCancel = () => {
+    setActive(false)
+    setTimer(0)
+    console.log("cancel")
+  }
 
   return (
 
@@ -54,18 +81,60 @@ const CardItem = ({ item }) => {
 
       <View style={style.cardItemTimerView}>
         <Text style={style.cardItemTimerText}>
-          {timer}
+          {timerString.current}
         </Text>
       </View>
 
-      <View style={{
-        marginBottom: 20, alignItems: "center", flexDirection: "row", justifyContent: "center",
-      }}>
+      <View style={style.iconContainer}>
 
-        <Icon name="controller-play" size={30} color={COLORS.secondary} />
-        <Icon name="controller-stop" size={30} color={COLORS.secondary} />
-        <Icon name="controller-paus" size={30} color={COLORS.secondary} />
-        <Icon name="check" size={30} color={COLORS.secondary} />
+        {
+          !active &&
+          <TouchableOpacity onPress={()=> handlePlay()}>
+            <Icon
+              name="controller-play"
+              size={40}
+              color={COLORS.secondary}
+              style={style.iconItem}
+            />
+          </TouchableOpacity>
+
+        }
+
+        {
+          active &&
+          <TouchableOpacity onPress={()=> handleCancel()}>
+            <Icon
+              name="controller-stop"
+              size={40}
+              color={COLORS.secondary}
+              style={style.iconItem}
+            />
+          </TouchableOpacity>
+        }
+
+        {
+          active &&
+          <TouchableOpacity onPress={()=> handlePause()}>
+            <Icon
+              name="controller-paus"
+              size={40}
+              color={COLORS.secondary}
+              style={style.iconItem}
+            />
+          </TouchableOpacity>
+        }
+
+        {
+          active &&
+          <TouchableOpacity onPress={()=> handleSave()}>
+            <Icon
+              name="check"
+              size={40}
+              color={COLORS.secondary}
+              style={style.iconItem}
+            />
+          </TouchableOpacity>
+        }
 
       </View>
 

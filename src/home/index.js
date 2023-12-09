@@ -4,34 +4,43 @@ import { SafeAreaView, ScrollView, Text, View } from "react-native";
 import style from "./style";
 import CardItem from "./cardItem";
 import MainTop from "./mainTop";
+import AddCardItem from "./addCardItem";
 
 
 const Index = () => {
 
   const cardList = [
     {
-      itemDescription: "Duolingo İngilzice Çlaışma",
-      itemTimer: "00:00:00"
-    },
-    {
-      itemDescription: "Duolingo İngilzice Çlaışma 10",
-      itemTimer: "00:01:00"
-    },
-    {
+      userId: 1,
       itemDescription: "Duolingo İngilzice Çlaışma1",
-      itemTimer: "00:02:00"
+      active: true,
+      totalSeconds: 0,
     },
     {
-      itemDescription: "Duolingo İngilzice Çlaışma3",
-      itemTimer: "00:03:00"
-    },
-    {
+      userId: 2,
       itemDescription: "Duolingo İngilzice Çlaışma2",
-      itemTimer: "00:40:00"
+      active: false,
+      totalSeconds: 50,
+    },
+    {
+      userId: 3,
+      itemDescription: "Duolingo İngilzice Çlaışma3",
+      active: false,
+      totalSeconds: 80,
+    },
+    {
+      userId: 4,
+      itemDescription: "Duolingo İngilzice Çlaışma4",
+      active: true,
+      totalSeconds: 90,
     },
 
 
   ];
+
+  const handleAddItem = () => {
+    console.log("add item")
+  }
 
 
   return (
@@ -44,12 +53,14 @@ const Index = () => {
           <ScrollView showsVerticalScrollIndicator={false}>
 
             {
-              cardList.map((x,index )=> {
+              cardList.map((x, index) => {
                 return (
-                  <CardItem item={x} key={index}  />
-                )
+                  <CardItem item={x} key={index} />
+                );
               })
             }
+
+            <AddCardItem title={"Yeni bir rutin ekleyin"} handleAddItem={handleAddItem} />
 
           </ScrollView>
 
