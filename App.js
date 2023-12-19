@@ -9,7 +9,7 @@ import React from 'react';
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from '@react-navigation/native';
-import { Home } from "./src";
+import { AddRoutine, Home } from "./src";
 
 
 
@@ -27,9 +27,10 @@ function App() {
         screenOptions={{
           headerShown: false
         }}
-        initialRouteName={'Home'}
+        initialRouteName={'AddRoutine'}
       >
         <Stack.Screen name="Home" component={Home}/>
+        <Stack.Screen name="AddRoutine" component={AddRoutine}/>
 
       </Stack.Navigator>
     </NavigationContainer>

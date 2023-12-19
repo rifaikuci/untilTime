@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, ScrollView, Text, View } from "react-native";
+import { SafeAreaView, ScrollView, View } from "react-native";
 
 import style from "./style";
 import CardItem from "./cardItem";
@@ -53,7 +53,7 @@ const Index = () => {
           <ScrollView showsVerticalScrollIndicator={false}>
 
             {
-              cardList.map((x, index) => {
+              cardList.map((x,index) => {
                 return (
                   <CardItem item={x} key={index} />
                 );
