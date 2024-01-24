@@ -6,4 +6,18 @@ export default StyleSheet.create({
     marginHorizontal: SIZES.baseContainerHorizontalMargin,
   },
 
+  inputContent: {
+    marginTop: 30
+  },
+
+  checkboxContent :{
+    marginHorizontal: SIZES.baseContainerHorizontalMargin,
+    marginVertical:20
+  },
+
+  sendButton: {
+    backgroundColor: "red",
+    color:"white"
+  }
+
 });
