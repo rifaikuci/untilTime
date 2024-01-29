@@ -1,13 +1,15 @@
-import React from "react";
-import { SafeAreaView, ScrollView, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Alert, Image, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native";
 
 import style from "./style";
 import CardItem from "./cardItem";
 import MainTop from "./mainTop";
 import AddCardItem from "./addCardItem";
+import createWebClient from "../../webClient";
+import { Loading } from "../../components";
 
 
-const Index = () => {
+const Index = (props) => {
 
   const cardList = [
     {
@@ -39,14 +41,36 @@ const Index = () => {
   ];
 
   const handleAddItem = () => {
-    console.log("add item")
+      props.navigation.navigate("AddRoutine")
   }
+
+
+  const [isLoading, setIsLoading] = useState(false)
+  const useWebClient = async () => {
+    try {
+      setIsLoading(true);
+      const WebClient = await createWebClient();
+
+      const response = await WebClient.post('', {method:'deviceControl'});
+
+    } catch (error) {
+      console.error('Error using WebClient:', error);
+    } finally {
+      setIsLoading(false);
+
+    }
+  };
+
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
 
 
   return (
     <SafeAreaView>
       <View style={style.topViewContainer}>
-
         <MainTop />
 
         <View style={style.cardListContainer}>
@@ -61,13 +85,14 @@ const Index = () => {
             }
 
             <AddCardItem title={"Yeni bir rutin ekleyin"} handleAddItem={handleAddItem} />
-
           </ScrollView>
 
         </View>
 
       </View>
     </SafeAreaView>
+
+
 
   );
 };

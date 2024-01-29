@@ -5,32 +5,56 @@
  * @format
  */
 
-import React from 'react';
+import React, { useState } from "react";
 
 import { createStackNavigator } from "@react-navigation/stack";
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer } from "@react-navigation/native";
 import { AddRoutine, Home } from "./src";
+import { getDeviceInfo } from "./util/deviceInfo";
+import axios from 'axios';
 
+axios.defaults.baseURL = "https://rifaikuci.com/sabish/";
+axios.defaults.withCredentials = true;
+axios.defaults.headers = {
+  'X-Parse-Application-Id': 'LkGs9nAHLHxFk23S',
+  'Cache-Control': 'no-cache',
+  'Pragma': 'no-cache',
+  'Expires': '0'
+};
 
+getDeviceInfo().then(deviceInfo => {
 
+  axios.defaults.headers['device-id'] = deviceInfo.deviceID;
+  axios.defaults.headers['app-version'] = deviceInfo.appVersion;
+  axios.defaults.headers['user-agent'] = deviceInfo.userAgent;
+  axios.defaults.headers['device-key'] = deviceInfo.deviceID;
+  axios.defaults.headers['platform'] = deviceInfo.systemName;
+  axios.defaults.headers['platform-version'] = deviceInfo.systemVersion;
+  axios.defaults.headers['brand-model'] = `${deviceInfo.deviceManufacturer}-${deviceInfo.model}`;
+  axios.defaults.headers['X-Forwarded-For'] = deviceInfo.ip;
+  axios.defaults.headers['mac-address'] = deviceInfo.macAddress;
+
+}).catch()
 
 
 
 const Stack = createStackNavigator();
 
 
+
 function App() {
 
+
   return (
-    <NavigationContainer >
+    <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
-          headerShown: false
+          headerShown: false,
         }}
-        initialRouteName={'AddRoutine'}
+        initialRouteName={"Home"}
       >
-        <Stack.Screen name="Home" component={Home}/>
-        <Stack.Screen name="AddRoutine" component={AddRoutine}/>
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="AddRoutine" component={AddRoutine} />
 
       </Stack.Navigator>
     </NavigationContainer>

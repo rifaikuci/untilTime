@@ -4,7 +4,7 @@ import {  SafeAreaView, TextInput, View } from "react-native";
 import { Header, InputCheckbox, InputText, UcButton } from "../../components";
 import { useState } from "react";
 
-const AddRoutine = () => {
+const AddRoutine = (props) => {
   const [title, setTitle] = useState("");
   const [mainPage, setMainPage] = useState(true);
 
@@ -24,7 +24,7 @@ const AddRoutine = () => {
   return (
     <SafeAreaView>
       <View style={style.topViewContainer}>
-        <Header goBack={true} title={"Rutin Ekle"} />
+        <Header goBack={true} title={"Rutin Ekle"} navigation={props.navigation} />
       </View>
 
       <View style={style.inputContent}>

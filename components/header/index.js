@@ -4,14 +4,14 @@ import { Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/Octicons";
 import { COLORS } from "../../constants/theme";
 import React from "react";
-const Header = ({title, goBack = false}) => {
+const Header = ({title, goBack = false, navigation}) => {
 
   return (
     <View style={style.headerContent}>
       {
         goBack &&
         <View style={style.headerBackIconContent}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=> {navigation.goBack()} }>
             <Icon name="arrow-left" size={25} color={COLORS.primary} />
           </TouchableOpacity>
         </View>
