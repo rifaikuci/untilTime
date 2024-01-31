@@ -1,25 +1,76 @@
 // AddRoutine.js
 import style from "./style";
-import {  SafeAreaView, TextInput, View } from "react-native";
-import { Header, InputCheckbox, InputText, UcButton } from "../../components";
-import { useState } from "react";
+import { Alert, SafeAreaView, TextInput, View } from "react-native";
+import { Header, InputCheckbox, InputText, Loading, UcButton } from "../../components";
+import React, { useState } from "react";
+import createWebClient from "../../webClient";
 
 const AddRoutine = (props) => {
   const [title, setTitle] = useState("");
   const [mainPage, setMainPage] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   const handleTitleChange = (text) => {
     setTitle(text);
   };
 
   const handleCheckboxChange = (isChecked) => {
-    console.log("Checkbox durumu:", isChecked);
-    // Burada başka işlemler yapabilirsiniz
+    setMainPage(isChecked);
   };
 
-  const handleSubmit = () => {
-    console.log(title, mainPage)
-  }
+
+  const handleSubmit = async () => {
+    if (title) {
+      try {
+
+        setIsLoading(true);
+        const WebClient = await createWebClient();
+
+        const response = await WebClient.post("", {
+          method: "saveRoutines",
+          title: title,
+          isMainPage: mainPage ? 1 : 0,
+        });
+
+        if (response?.data?.success) {
+          Alert.alert("Bilgi", "Rutin başarılı bir şekilde kaydedildi", [
+            {
+              text: "Tamam",
+              onPress: () => {
+                props.navigation.navigate("Home");
+              },
+            },
+          ]);
+        } else {
+          Alert.alert("Hata", "Rutin eklenirken bir hata oluştu", [
+            {
+              text: "Tamam",
+              onPress: () => {
+              },
+            },
+          ]);
+        }
+
+      } catch (error) {
+        console.error("Error using WebClient:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      Alert.alert("Hata", "Rutin adı giriniz", [
+        {
+          text: "Tamam",
+          onPress: () => {
+          },
+        },
+      ]);
+    }
+  };
+
 
   return (
     <SafeAreaView>
@@ -43,7 +94,7 @@ const AddRoutine = (props) => {
       </View>
 
 
-     <UcButton title={"Kaydet"} handlePress={handleSubmit}  />
+      <UcButton title={"Kaydet"} handlePress={handleSubmit} />
 
     </SafeAreaView>
   );

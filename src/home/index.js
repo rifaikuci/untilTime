@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Image, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, ScrollView, View } from "react-native";
 
 import style from "./style";
 import CardItem from "./cardItem";
@@ -60,6 +60,10 @@ const Index = (props) => {
 
     }
   };
+
+  useEffect(() => {
+    useWebClient().then(r => {});
+  }, []);
 
 
   if (isLoading) {

@@ -11,9 +11,6 @@ const createWebClient = async () => {
     const WebClient = axios.create({
       baseURL: 'http://localhost/rifaikuci.com/untilTime/',
       timeout: 10000,
-      data: {
-        method: 'deviceControl'
-      },
       headers: {
         'Content-Type': 'application/json'
       }
