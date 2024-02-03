@@ -2,38 +2,72 @@
 import style from "./style";
 import { Alert, SafeAreaView, TextInput, View } from "react-native";
 import { Header, InputCheckbox, InputText, Loading, UcButton } from "../../components";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import createWebClient from "../../webClient";
 
 const AddRoutine = (props) => {
-  const [title, setTitle] = useState("");
-  const [mainPage, setMainPage] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const title = useRef("");
+  const mainPage = useRef(true);
+  const isLoading = useRef(false);
+  const [refresh, setRefresh] = useState(false);
 
-  if (isLoading) {
+  const routineId = props.route?.params?.routineId;
+  const deviceId = props.route?.params?.deviceId;
+
+
+  useEffect( () => {
+      const fetchData = async  () => {
+        if (routineId) {
+          try {
+            isLoading.current = true;
+            const WebClient = await createWebClient();
+
+            const response = await WebClient.post("", {
+              method: "getRoutineId",
+              routineId: routineId
+            });
+
+            title.current = response.data.title;
+            mainPage.current = response.data.isMainPage == 1 ? true : false
+          } catch (error) {
+            console.error("Error using WebClient:", error);
+          } finally {
+            isLoading.current = false;
+            setRefresh(!refresh);
+          }
+        }
+      }
+
+      fetchData().then(()=> {})
+  }, []);
+
+
+  if (isLoading.current) {
     return <Loading />;
   }
 
   const handleTitleChange = (text) => {
-    setTitle(text);
+    title.current = text;
+    setRefresh(!refresh);
   };
 
   const handleCheckboxChange = (isChecked) => {
-    setMainPage(isChecked);
+    mainPage.current = isChecked;
+    setRefresh(!refresh);
   };
 
 
   const handleSubmit = async () => {
-    if (title) {
+    if (title.current) {
       try {
 
-        setIsLoading(true);
+        isLoading.current = true;
         const WebClient = await createWebClient();
 
         const response = await WebClient.post("", {
           method: "saveRoutines",
-          title: title,
-          isMainPage: mainPage ? 1 : 0,
+          title: title.current,
+          isMainPage: mainPage.current ? 1 : 0,
         });
 
         if (response?.data?.success) {
@@ -58,7 +92,106 @@ const AddRoutine = (props) => {
       } catch (error) {
         console.error("Error using WebClient:", error);
       } finally {
-        setIsLoading(false);
+        isLoading.current = false;
+        setRefresh(!refresh);
+      }
+    } else {
+      Alert.alert("Hata", "Rutin adı giriniz", [
+        {
+          text: "Tamam",
+          onPress: () => {
+          },
+        },
+      ]);
+    }
+  };
+
+
+  const handleUpdate = async () => {
+    if (title.current) {
+      try {
+
+        isLoading.current = true;
+        const WebClient = await createWebClient();
+
+        const response = await WebClient.post("", {
+          method: "updateRoutine",
+          title: title.current,
+          isMainPage: mainPage.current ? 1 : 0,
+          routineId : routineId
+        });
+        console.log(response);
+
+        if (response?.data?.success) {
+          Alert.alert("Bilgi", "Rutin başarılı bir şekilde Güncellendi", [
+            {
+              text: "Tamam",
+              onPress: () => {
+                props.navigation.navigate("Home");
+              },
+            },
+          ]);
+        } else {
+          Alert.alert("Hata", "Rutin Güncellenirken bir hata oluştu", [
+            {
+              text: "Tamam",
+              onPress: () => {
+              },
+            },
+          ]);
+        }
+
+      } catch (error) {
+        console.error("Error using WebClient:", error);
+      } finally {
+        isLoading.current = false;
+        setRefresh(!refresh);
+      }
+    } else {
+      Alert.alert("Hata", "Rutin adı giriniz", [
+        {
+          text: "Tamam",
+          onPress: () => {
+          },
+        },
+      ]);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (title.current) {
+      try {
+
+        isLoading.current = true;
+        const WebClient = await createWebClient();
+
+        const responseDelete = await WebClient.post('', {method:'deleteRoutine', routineId : routineId, deviceId: deviceId});
+
+
+        if( responseDelete.data.success) {
+          Alert.alert("Bilgi", "Rutin başarılı bir şekilde silindi", [
+            {
+              text: "Tamam",
+              onPress: () => {
+                props.navigation.navigate("Home");
+              },
+            },
+          ]);
+        } else {
+          Alert.alert("Hata", "Rutin silinirken bir hata oluştu", [
+            {
+              text: "Tamam",
+              onPress: () => {
+              },
+            },
+          ]);
+        }
+
+      } catch (error) {
+        console.error("Error using WebClient:", error);
+      } finally {
+        isLoading.current = false;
+        setRefresh(!refresh);
       }
     } else {
       Alert.alert("Hata", "Rutin adı giriniz", [
@@ -75,26 +208,39 @@ const AddRoutine = (props) => {
   return (
     <SafeAreaView>
       <View style={style.topViewContainer}>
-        <Header goBack={true} title={"Rutin Ekle"} navigation={props.navigation} />
+        <Header goBack={true} title={routineId ? "Rutin Güncelle": "Rutin Ekle"} navigation={props.navigation} />
       </View>
 
       <View style={style.inputContent}>
         <InputText
           placeHolderText={"Rutin giriniz..."}
-          value={title}
+          value={title.current}
           onChangeText={handleTitleChange}
         />
       </View>
       <View style={style.checkboxContent}>
         <InputCheckbox
-          value={mainPage}
+          value={mainPage.current}
           label="Anasayfada gözükmeli mi?"
           onChange={handleCheckboxChange}
         />
       </View>
 
 
-      <UcButton title={"Kaydet"} handlePress={handleSubmit} />
+      {
+        routineId ?
+          <UcButton title={"Güncelle"} handlePress={ handleUpdate} /> :
+          <UcButton title={"Kaydet"} handlePress={ handleSubmit} />
+      }
+
+      {
+        routineId ?
+          <UcButton contentStyle={{
+            marginTop: 25,
+            backgroundColor: 'black',
+          }}  title={"Sil"} handlePress={ handleDelete} /> : null
+      }
+
 
     </SafeAreaView>
   );

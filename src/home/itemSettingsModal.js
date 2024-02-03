@@ -5,7 +5,7 @@ import Modal from "react-native-modal";
 import { COLORS } from "../../constants/theme";
 import Icon from "react-native-vector-icons/AntDesign";
 
-const ItemSettingsModal = ({ isModalVisible, setModalVisible, item }) => {
+const ItemSettingsModal = ({ isModalVisible, setModalVisible, handleDelete, handleMainPage, selectedItem, handleUpdate }) => {
 
   return (
 
@@ -18,34 +18,48 @@ const ItemSettingsModal = ({ isModalVisible, setModalVisible, item }) => {
         <View style={style.modalBody}>
           <View style={style.modalTitleContent}>
             <Text style={style.modalTitle}>
-              {item.itemDescription}
+              {selectedItem ? selectedItem.title :"asd"}
             </Text>
           </View>
 
-          <TouchableOpacity style={style.modalCloseIconContent} onPress={() => setModalVisible(false)} >
+          <TouchableOpacity style={style.modalCloseIconContent} onPress={() => setModalVisible(false)}>
             <Icon name="close" size={30} color={COLORS.black} />
           </TouchableOpacity>
         </View>
 
         <View style={style.choosenContent}>
 
-          <View style={style.choosenItem}>
-            <Text style={style.choosenItemText}>
-              Anasayfadan Çıkar
-            </Text>
-          </View>
+          <TouchableOpacity onPress={() => handleUpdate(selectedItem.id)}>
+            <View style={style.choosenItem}>
+              <Text style={style.choosenItemText}>
+                Düzenle
+              </Text>
+            </View>
+          </TouchableOpacity>
 
+          <TouchableOpacity onPress={() => handleMainPage(selectedItem.id)}>
+            <View style={style.choosenItem}>
+              <Text style={style.choosenItemText}>
+                Anasayfadan Çıkar
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={()=> console.log("anA")}>
           <View style={style.choosenItem}>
             <Text style={style.choosenItemText}>
               Rutininizi inceleyin
             </Text>
           </View>
+          </TouchableOpacity>
 
+          <TouchableOpacity onPress={() => handleDelete(selectedItem.id)}>
           <View style={style.choosenItem}>
             <Text style={style.choosenItemText}>
               Rutini sil
             </Text>
           </View>
+          </TouchableOpacity>
         </View>
 
       </View>

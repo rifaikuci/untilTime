@@ -7,12 +7,12 @@ import { COLORS } from "../../constants/theme";
 import ItemSettingsModal from "./itemSettingsModal";
 
 
-const CardItem = ({ item }) => {
+const CardItem = ({ item, handleDelete, handleMainPage,isModalVisible, setModalVisible, selectedItem, handleUpdate }) => {
 
 
   const [timer, setTimer] = useState(item.totalSeconds ? item.totalSeconds : "0");
   const timerString = useRef( item.totalSeconds ? showTimer(item.totalSeconds) : showTimer(0));
-  const [active, setActive] = useState(item.active);
+  const [active, setActive] = useState(item.active ? item.active : false);
 
   useEffect(() => {
 
@@ -32,7 +32,8 @@ const CardItem = ({ item }) => {
 
   }, [active]);
 
-  const [isModalVisible, setModalVisible] = useState(false);
+
+
 
   // type kısmıda gönderilecek.
   const handlePlay = () => {
@@ -56,25 +57,38 @@ const CardItem = ({ item }) => {
     console.log("cancel")
   }
 
+
+
   return (
 
     <View style={style.cardItemContainer}>
 
-      <ItemSettingsModal
-        isModalVisible={isModalVisible}
-        setModalVisible={setModalVisible}
-        item={item}
-      />
+      {
+            <ItemSettingsModal
+              handleDelete={handleDelete}
+              handleMainPage={handleMainPage}
+              handleUpdate={handleUpdate}
+              isModalVisible={isModalVisible}
+              setModalVisible={setModalVisible}
+              selectedItem={selectedItem ? selectedItem.current : null}
+            />
+      }
+
 
       <View style={style.cardItemContentTopBar}>
 
         <View style={style.cardItemContentTopDesc}>
           <Text style={style.cardItemContentTopText}>
-            {item.itemDescription}
+            {item.title}
           </Text>
         </View>
 
-        <TouchableOpacity style={style.cardItemContentTopIcon} onPress={() => setModalVisible(true)}>
+        <TouchableOpacity style={style.cardItemContentTopIcon} onPress={() => {
+
+          selectedItem.current = item
+          setModalVisible(true)}
+        }
+          >
           <Icon name="dots-three-vertical" size={20} color={COLORS.secondary} />
         </TouchableOpacity>
       </View>
