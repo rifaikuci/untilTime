@@ -9,9 +9,10 @@ import React, { useState } from "react";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import { AddRoutine, Home } from "./src";
+import { AddRoutine, FullRoutine, Home } from "./src";
 import { getDeviceInfo } from "./util/deviceInfo";
 import axios from 'axios';
+import { createDrawerNavigator } from "@react-navigation/drawer";
 
 axios.defaults.baseURL = "https://rifaikuci.com/sabish/";
 axios.defaults.withCredentials = true;
@@ -39,7 +40,24 @@ getDeviceInfo().then(deviceInfo => {
 
 
 const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
+
+
+const Root = () => {
+  return (
+    <Drawer.Navigator screenOptions={{ headerShown: false}}>
+      <Drawer.Screen name="Home" component={Home} options={{
+        drawerLabel:"Ana sayfa",
+        drawerLabelStyle: {  fontWeight: '500' }
+      }}  />
+      <Drawer.Screen name="fullRoutine" component={FullRoutine} options={{
+        drawerLabel:"Tüm rutinleri göster",
+        drawerLabelStyle: {  fontWeight: '500' }
+      }}  />
+    </Drawer.Navigator>
+  );
+}
 
 
 function App() {
@@ -53,9 +71,12 @@ function App() {
         }}
         initialRouteName={"Home"}
       >
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="AddRoutine" component={AddRoutine} />
-
+        <Stack.Screen
+          name="Root"
+          component={Root}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name={"AddRoutine"} component={AddRoutine} />
       </Stack.Navigator>
     </NavigationContainer>
 

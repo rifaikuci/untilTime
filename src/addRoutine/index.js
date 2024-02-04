@@ -7,7 +7,7 @@ import createWebClient from "../../webClient";
 
 const AddRoutine = (props) => {
   const title = useRef("");
-  const mainPage = useRef(true);
+  const mainPage = useRef(props.route && props.route.params && props.route.params.mainPage == 0  ? false : true);
   const isLoading = useRef(false);
   const [refresh, setRefresh] = useState(false);
 
@@ -26,9 +26,7 @@ const AddRoutine = (props) => {
               method: "getRoutineId",
               routineId: routineId
             });
-
             title.current = response.data.title;
-            mainPage.current = response.data.isMainPage == 1 ? true : false
           } catch (error) {
             console.error("Error using WebClient:", error);
           } finally {
@@ -75,7 +73,7 @@ const AddRoutine = (props) => {
             {
               text: "Tamam",
               onPress: () => {
-                props.navigation.navigate("Home");
+                props.navigation.goBack();
               },
             },
           ]);
@@ -120,14 +118,13 @@ const AddRoutine = (props) => {
           isMainPage: mainPage.current ? 1 : 0,
           routineId : routineId
         });
-        console.log(response);
 
         if (response?.data?.success) {
           Alert.alert("Bilgi", "Rutin başarılı bir şekilde Güncellendi", [
             {
               text: "Tamam",
               onPress: () => {
-                props.navigation.navigate("Home");
+                props.navigation.goBack();
               },
             },
           ]);
@@ -173,7 +170,7 @@ const AddRoutine = (props) => {
             {
               text: "Tamam",
               onPress: () => {
-                props.navigation.navigate("Home");
+                props.navigation.goBack();
               },
             },
           ]);

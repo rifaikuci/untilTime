@@ -4,7 +4,6 @@ import { SafeAreaView, ScrollView, View } from "react-native";
 import style from "./style";
 import CardItem from "./cardItem";
 import MainTop from "./mainTop";
-import AddCardItem from "./addCardItem";
 import createWebClient from "../../webClient";
 import { Loading } from "../../components";
 import { useFocusEffect } from "@react-navigation/native";
@@ -18,38 +17,6 @@ const Index = (props) => {
   const [refresh, setRefresh] = useState(false);
   const selectedItem = useRef({});
 
-  const cardList = [
-    {
-      userId: 1,
-      itemDescription: "Duolingo İngilzice Çlaışma1",
-      active: true,
-      totalSeconds: 0,
-    },
-    {
-      userId: 2,
-      itemDescription: "Duolingo İngilzice Çlaışma2",
-      active: false,
-      totalSeconds: 50,
-    },
-    {
-      userId: 3,
-      itemDescription: "Duolingo İngilzice Çlaışma3",
-      active: false,
-      totalSeconds: 80,
-    },
-    {
-      userId: 4,
-      itemDescription: "Duolingo İngilzice Çlaışma4",
-      active: true,
-      totalSeconds: 90,
-    }
-
-  ];
-
-  const handleAddItem = () => {
-      props.navigation.navigate("AddRoutine")
-  }
-
 
   const [isLoading, setIsLoading] = useState(false)
   const useWebClient = async () => {
@@ -61,7 +28,7 @@ const Index = (props) => {
       deviceInfo.current = response.data;
 
       if(response.data.id) {
-        const routineResponse = await WebClient.post('', {method:'getRoutinesMainPage', deviceId: response.data.id});
+        const routineResponse = await WebClient.post('', {method:'getRoutines', deviceId: response.data.id});
 
         routines.current = routineResponse.data;
         setRefresh(!refresh);
@@ -112,7 +79,6 @@ const Index = (props) => {
   }
 
   const handleUpdate = (item) => {
-    console.log(item.isMainPage, "item")
     setModalVisible(false)
     props.navigation.navigate("AddRoutine", {routineId : item.id, deviceId: deviceInfo.current.id, mainPage:item.isMainPage } )
   }
@@ -144,7 +110,6 @@ const Index = (props) => {
               })
             }
 
-            <AddCardItem title={"Yeni bir rutin ekleyin"} handleAddItem={handleAddItem} />
           </ScrollView>
 
         </View>

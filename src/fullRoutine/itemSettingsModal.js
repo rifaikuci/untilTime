@@ -37,14 +37,6 @@ const ItemSettingsModal = ({ isModalVisible, setModalVisible, handleDelete, hand
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => handleMainPage(selectedItem.id)}>
-            <View style={style.choosenItem}>
-              <Text style={style.choosenItemText}>
-                Anasayfadan Çıkar
-              </Text>
-            </View>
-          </TouchableOpacity>
-
           <TouchableOpacity onPress={()=> console.log("anA")}>
           <View style={style.choosenItem}>
             <Text style={style.choosenItemText}>
