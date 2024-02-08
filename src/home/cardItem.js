@@ -7,16 +7,18 @@ import { COLORS } from "../../constants/theme";
 import ItemSettingsModal from "./itemSettingsModal";
 
 
-const CardItem = ({ item, handleDelete, handleMainPage,isModalVisible, setModalVisible, selectedItem, handleUpdate }) => {
+const CardItem = ({
+                    item, handleDelete, handleMainPage,isModalVisible,
+                    setModalVisible, selectedItem, handleUpdate,
+                    handlePlay, handleSave }) => {
 
 
   const [timer, setTimer] = useState(item.totalSeconds ? item.totalSeconds : "0");
   const timerString = useRef( item.totalSeconds ? showTimer(item.totalSeconds) : showTimer(0));
-  const [active, setActive] = useState(item.active ? item.active : false);
 
   useEffect(() => {
 
-    if (active) {
+    if (item.active) {
 
       let totalSeconds = timer;
       const intervalId = setInterval(() => {
@@ -28,36 +30,13 @@ const CardItem = ({ item, handleDelete, handleMainPage,isModalVisible, setModalV
       }, 1000);
 
       return () => clearInterval(intervalId);
+    } else {
+      setTimer(0)
+      const formattedTimer = showTimer(0);
+      timerString.current = formattedTimer;
     }
 
-  }, [active]);
-
-
-
-
-  // type kısmıda gönderilecek.
-  const handlePlay = () => {
-      setActive(true)
-      console.log("play")
-  }
-
-  const handlePause = () => {
-    setActive(false)
-    console.log("pause")
-  }
-
-  const handleSave = () => {
-    setActive(false)
-    console.log("save")
-  }
-
-  const handleCancel = () => {
-    setActive(false)
-    setTimer(0)
-    console.log("cancel")
-  }
-
-
+  }, [item.active]);
 
   return (
 
@@ -102,8 +81,8 @@ const CardItem = ({ item, handleDelete, handleMainPage,isModalVisible, setModalV
       <View style={style.iconContainer}>
 
         {
-          !active &&
-          <TouchableOpacity onPress={()=> handlePlay()}>
+          !item.active &&
+          <TouchableOpacity onPress={() => handlePlay(item)}>
             <Icon
               name="controller-play"
               size={40}
@@ -115,32 +94,8 @@ const CardItem = ({ item, handleDelete, handleMainPage,isModalVisible, setModalV
         }
 
         {
-          active &&
-          <TouchableOpacity onPress={()=> handleCancel()}>
-            <Icon
-              name="controller-stop"
-              size={40}
-              color={COLORS.secondary}
-              style={style.iconItem}
-            />
-          </TouchableOpacity>
-        }
-
-        {
-          active &&
-          <TouchableOpacity onPress={()=> handlePause()}>
-            <Icon
-              name="controller-paus"
-              size={40}
-              color={COLORS.secondary}
-              style={style.iconItem}
-            />
-          </TouchableOpacity>
-        }
-
-        {
-          active &&
-          <TouchableOpacity onPress={()=> handleSave()}>
+          item.active &&
+          <TouchableOpacity onPress={()=>handleSave(item)}>
             <Icon
               name="check"
               size={40}

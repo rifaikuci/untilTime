@@ -18,34 +18,6 @@ const Index = (props) => {
   const [refresh, setRefresh] = useState(false);
   const selectedItem = useRef({});
 
-  const cardList = [
-    {
-      userId: 1,
-      itemDescription: "Duolingo İngilzice Çlaışma1",
-      active: true,
-      totalSeconds: 0,
-    },
-    {
-      userId: 2,
-      itemDescription: "Duolingo İngilzice Çlaışma2",
-      active: false,
-      totalSeconds: 50,
-    },
-    {
-      userId: 3,
-      itemDescription: "Duolingo İngilzice Çlaışma3",
-      active: false,
-      totalSeconds: 80,
-    },
-    {
-      userId: 4,
-      itemDescription: "Duolingo İngilzice Çlaışma4",
-      active: true,
-      totalSeconds: 90,
-    }
-
-  ];
-
   const handleAddItem = () => {
       props.navigation.navigate("AddRoutine")
   }
@@ -117,6 +89,36 @@ const Index = (props) => {
     props.navigation.navigate("AddRoutine", {routineId : item.id, deviceId: deviceInfo.current.id, mainPage:item.isMainPage } )
   }
 
+  const handlePlay = async (item) => {
+
+
+    const WebClient = await createWebClient();
+
+    const responseStart = await WebClient.post('', {method:'startRoutineTimes', routineId : item.id, deviceId: deviceInfo.current.id});
+
+    if(deviceInfo.current && responseStart.data.success) {
+      routines.current.find(x => x.id === item.id).active = true;
+      routines.current.find(x=>x.id === item.id).routineTimesId = responseStart.data.routineTimesId;
+      setRefresh(!refresh)
+    }
+  }
+
+
+
+  const handleSave =  async  (item) => {
+
+    const WebClient = await createWebClient();
+
+    const responseStart = await WebClient.post('', {method:'finishRoutineTimes', routineId : item.id, deviceId: deviceInfo.current.id, routineTimesId: item.routineTimesId});
+
+    if(deviceInfo.current && responseStart.data.success) {
+      routines.current.find(x => x.id === item.id).totalSeconds = 0;
+      routines.current.find(x => x.id === item.id).active = false;
+      setRefresh(!refresh)
+    }
+
+  }
+
 
 
   return (
@@ -139,6 +141,8 @@ const Index = (props) => {
                     handleDelete={handleDelete}
                     handleMainPage={handleUpdateMainPage}
                     handleUpdate={handleUpdate}
+                    handlePlay={handlePlay}
+                    handleSave={handleSave}
                   />
                 );
               })

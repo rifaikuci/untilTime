@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -23,17 +23,10 @@ axios.defaults.headers = {
   'Expires': '0'
 };
 
+
 getDeviceInfo().then(deviceInfo => {
 
-  axios.defaults.headers['device-id'] = deviceInfo.deviceID;
-  axios.defaults.headers['app-version'] = deviceInfo.appVersion;
-  axios.defaults.headers['user-agent'] = deviceInfo.userAgent;
-  axios.defaults.headers['device-key'] = deviceInfo.deviceID;
-  axios.defaults.headers['platform'] = deviceInfo.systemName;
-  axios.defaults.headers['platform-version'] = deviceInfo.systemVersion;
-  axios.defaults.headers['brand-model'] = `${deviceInfo.deviceManufacturer}-${deviceInfo.model}`;
-  axios.defaults.headers['X-Forwarded-For'] = deviceInfo.ip;
-  axios.defaults.headers['mac-address'] = deviceInfo.macAddress;
+
 
 }).catch()
 
@@ -61,7 +54,40 @@ const Root = () => {
 
 
 function App() {
+  const [isDeviceInfoLoaded, setIsDeviceInfoLoaded] = useState(false);
 
+  useEffect(() => {
+    const initializeApp = async () => {
+      try {
+        const deviceInfo = await getDeviceInfo();
+
+        // Eğer deviceID başarıyla alındıysa
+        if (deviceInfo.deviceID) {
+          axios.defaults.headers['device-id'] = deviceInfo.deviceID;
+          axios.defaults.headers['app-version'] = deviceInfo.appVersion;
+          axios.defaults.headers['user-agent'] = deviceInfo.userAgent;
+          axios.defaults.headers['device-key'] = deviceInfo.deviceID;
+          axios.defaults.headers['platform'] = deviceInfo.systemName;
+          axios.defaults.headers['platform-version'] = deviceInfo.systemVersion;
+          axios.defaults.headers['brand-model'] = `${deviceInfo.deviceManufacturer}-${deviceInfo.model}`;
+          axios.defaults.headers['X-Forwarded-For'] = deviceInfo.ip;
+          axios.defaults.headers['mac-address'] = deviceInfo.macAddress;
+
+          setIsDeviceInfoLoaded(true);
+        } else {
+          console.error("Device ID could not be obtained.");
+        }
+      } catch (error) {
+        console.error("An error occurred while obtaining device info:", error);
+      }
+    };
+
+    initializeApp().then(()=> {});
+  }, []); // Sadece ilk render için çalıştır
+
+  if (!isDeviceInfoLoaded) {
+    return null; // ya da başka bir yükleme ekranı görüntüleyebilirsiniz
+  }
 
   return (
     <NavigationContainer>
