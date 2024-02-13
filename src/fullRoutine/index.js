@@ -2,14 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView, ScrollView, View } from "react-native";
 
 import style from "./style";
-import CardItem from "./cardItem";
 import MainTop from "./mainTop";
 import createWebClient from "../../webClient";
-import { Loading } from "../../components";
+import { Loading, CardItem} from "../../components";
 import { useFocusEffect } from "@react-navigation/native";
 
 
-const Index = (props) => {
+const FullRoutine = (props) => {
 
   const routines = useRef([]);
   const deviceInfo = useRef({});
@@ -123,4 +122,4 @@ const Index = (props) => {
 };
 
 
-export default Index;
+export default FullRoutine;

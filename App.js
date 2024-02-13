@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import { AddRoutine, FullRoutine, Home } from "./src";
+import { AddRoutine, DetailRoutine, FullRoutine, Home } from "./src";
 import { getDeviceInfo } from "./util/deviceInfo";
 import axios from 'axios';
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -44,7 +44,7 @@ const Root = () => {
         drawerLabel:"Ana sayfa",
         drawerLabelStyle: {  fontWeight: '500' }
       }}  />
-      <Drawer.Screen name="fullRoutine" component={FullRoutine} options={{
+      <Drawer.Screen name="FullRoutine" component={FullRoutine} options={{
         drawerLabel:"Tüm rutinleri göster",
         drawerLabelStyle: {  fontWeight: '500' }
       }}  />
@@ -103,6 +103,7 @@ function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen name={"AddRoutine"} component={AddRoutine} />
+        <Stack.Screen name={"DetailRoutine"} component={DetailRoutine} />
       </Stack.Navigator>
     </NavigationContainer>
 

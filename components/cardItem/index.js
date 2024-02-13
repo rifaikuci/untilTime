@@ -4,17 +4,17 @@ import React, { useEffect, useRef, useState } from "react";
 import { showTimer, timeConvertSecond } from "../../util/helper";
 import Icon from "react-native-vector-icons/Entypo";
 import { COLORS } from "../../constants/theme";
-import ItemSettingsModal from "./itemSettingsModal";
+import { ItemSettingsModal } from "../index";
 
 
 const CardItem = ({
                     item, handleDelete, handleMainPage,isModalVisible,
                     setModalVisible, selectedItem, handleUpdate,
-                    handlePlay, handleSave }) => {
+                    handlePlay, handleSave, settingsView=true, isDetail = false }) => {
 
 
   const [timer, setTimer] = useState(item.totalSeconds ? item.totalSeconds : "0");
-  const timerString = useRef( item.totalSeconds ? showTimer(item.totalSeconds) : showTimer(0));
+  const [timerString,setTimerString] = useState( item.totalSeconds ? showTimer(item.totalSeconds) : showTimer(0));
 
   useEffect(() => {
 
@@ -25,16 +25,21 @@ const CardItem = ({
           totalSeconds++;
           setTimer(totalSeconds)
           const formattedTimer = showTimer(totalSeconds);
-          timerString.current = formattedTimer;
+          setTimerString(formattedTimer);
 
       }, 1000);
 
       return () => clearInterval(intervalId);
+    } else if(isDetail) {
+      const formattedTimer = showTimer(timer);
+      setTimerString(formattedTimer);
     } else {
       setTimer(0)
       const formattedTimer = showTimer(0);
-      timerString.current = formattedTimer;
+      setTimerString(formattedTimer);
     }
+
+
 
   }, [item.active]);
 
@@ -62,19 +67,23 @@ const CardItem = ({
           </Text>
         </View>
 
-        <TouchableOpacity style={style.cardItemContentTopIcon} onPress={() => {
+        {
+          settingsView ?
+            <TouchableOpacity style={style.cardItemContentTopIcon} onPress={() => {
 
-          selectedItem.current = item
-          setModalVisible(true)}
+              selectedItem.current = item
+              setModalVisible(true)}
+            }
+            >
+              <Icon name="dots-three-vertical" size={20} color={COLORS.secondary} />
+            </TouchableOpacity> : null
         }
-          >
-          <Icon name="dots-three-vertical" size={20} color={COLORS.secondary} />
-        </TouchableOpacity>
+
       </View>
 
       <View style={style.cardItemTimerView}>
         <Text style={style.cardItemTimerText}>
-          {timerString.current}
+          {timerString}
         </Text>
       </View>
 
