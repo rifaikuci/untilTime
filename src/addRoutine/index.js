@@ -68,7 +68,7 @@ const AddRoutine = (props) => {
           isMainPage: mainPage.current ? 1 : 0,
         });
 
-        if (response?.data?.success) {
+        if (response?.data) {
           Alert.alert("Bilgi", "Rutin başarılı bir şekilde kaydedildi", [
             {
               text: "Tamam",

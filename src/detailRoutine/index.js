@@ -6,6 +6,8 @@ import createWebClient from "../../webClient";
 import Accordion from "react-native-collapsible/Accordion";
 import * as Animatable from "react-native-animatable";
 import { COLORS } from "../../constants/theme";
+import { showTimer } from "../../util/helper";
+import { useFocusEffect } from "@react-navigation/native";
 
 
 
@@ -16,17 +18,23 @@ const DetailRoutine = (props) => {
   const [timeType, setTimeType] = useState("DAILY");
   const [totalSeconds, setTotalSeconds] = useState(0);
   const [active, setActive] = useState(false);
+  const [records, setRecords] = useState([]);
+  const deviceId = props.route.params.deviceId;
+  const [routineTimesId,setRoutineTimesId] = useState(props.route.params.routineTimesId);
 
 
   const [data, setData]  = useState([]);
   const title = props.route.params.title;
   const routineId = props.route.params.id;
 
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchData(timeType).then(()=> {})
+    }, []),
+  );
 
-  useEffect( () => {
 
-    fetchData(timeType).then(()=> {})
-  }, []);
+
 
 
   const fetchData = async  (timeTypeTemp) => {
@@ -41,9 +49,13 @@ const DetailRoutine = (props) => {
           timeType: timeTypeTemp
         });
 
+        if(response.data) {
+          setTotalSeconds(response.data ? response.data.totalSeconds : 0)
+          setActive(response.data  &&  response.data.active == 1  ? true : false)
+          setRecords(response.data.records);
+        }
 
-         setTotalSeconds(response.data && response.data.length > 0 ? response.data[response.data.length -1].totalSeconds : 0)
-         setActive(response.data && response.data.length > 0 ? response.data[response.data.length -1].active : false)
+
       } catch (error) {
         console.error("Error using WebClient:", error);
       } finally {
@@ -77,15 +89,31 @@ const DetailRoutine = (props) => {
 
     const WebClient = await createWebClient();
 
+    const responseStart = await WebClient.post("", {
+      method: "startRoutineTimes",
+      routineId: routineId,
+      deviceId: deviceId
+    });
+    setRoutineTimesId(responseStart.data.routineTimesId);
+    fetchData(timeType).then(()=> {});
+
+
 
   };
 
 
-  const handleSave = async (item) => {
+  const handleSave = async () => {
 
     const WebClient = await createWebClient();
 
+    const responseStart = await WebClient.post("", {
+      method: "finishRoutineTimes",
+      routineId: routineId,
+      deviceId: deviceId,
+      routineTimesId: routineTimesId,
+    });
 
+    fetchData(timeType).then(()=> {});
   };
 
 
@@ -145,7 +173,7 @@ const DetailRoutine = (props) => {
 
           <Accordion
             activeSections={activeSections}
-            sections={data}
+            sections={records}
             touchableComponent={TouchableOpacity}
             renderHeader={renderHeader}
             renderContent={renderContent}
@@ -170,7 +198,7 @@ const DetailRoutine = (props) => {
       >
         <View>
           <Text style={style.listItemHeaderText}>
-            {`${section.tarih} (${section.toplam_sure})`}
+            {`${section.date}` + '   ('+showTimer(section.totalSeconds) + ')'}
           </Text>
         </View>
 
@@ -180,10 +208,10 @@ const DetailRoutine = (props) => {
   };
   const subItemContent = (e) => {
     return (
-      <View style={style.subItemContentContainer} key={e.item}>
+      <View style={style.subItemContentContainer} key={e.id}>
         <View style={style.subItemTextContent}>
           <Text style={style.subItemText}>
-            {"23.12.2023 10:15 (100:35:3)"}
+            {e.startDate + "  ("+  showTimer(e.totalSeconds) +")"}
           </Text>
         </View>
 
@@ -211,7 +239,7 @@ const DetailRoutine = (props) => {
       >
         <FlatList
           scrollEnabled={false}
-          data={[{ item: 1 }, { item: 2 }, { item: 3 }, { item: 4 }, { item: 5 }, { item: 6 }, { item: 7 }, { item: 8 }]}
+          data={section.items}
           renderItem={({ item }) => subItemContent(item)}
           keyExtractor={(item, index) => `key-${index}`}
         />

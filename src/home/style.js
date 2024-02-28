@@ -13,6 +13,7 @@ export default StyleSheet.create({
   },
 
   mainTopContainer: {
+    marginTop: 20,
     width: "100%",
     alignItems: "center",
   },

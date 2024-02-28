@@ -35,6 +35,7 @@ const Index = (props) => {
         const routineResponse = await WebClient.post("", { method: "getRoutinesMainPage", deviceId: response.data.id });
 
         routines.current = routineResponse.data;
+
         setRefresh(!refresh);
       }
     } catch (error) {
@@ -145,7 +146,7 @@ const Index = (props) => {
   };
 
   const  handleDetail = (x) => {
-    props.navigation.navigate("DetailRoutine", {...x} )
+    props.navigation.navigate("DetailRoutine", {...x,  deviceId: deviceInfo.current.id} )
 
   }
 

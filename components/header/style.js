@@ -3,6 +3,7 @@ import { COLORS, SIZES } from "../../constants/theme";
 
 export default StyleSheet.create({
   headerContent: {
+    marginTop: 20,
     flexDirection: "row",
   },
 

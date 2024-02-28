@@ -9,7 +9,7 @@ const createWebClient = async () => {
 
 
     const WebClient = axios.create({
-      baseURL: 'http://localhost/rifaikuci.com/untilTime/',
+      baseURL: 'https://rifaikuci.com/untilTime/',
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json'

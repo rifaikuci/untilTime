@@ -77,7 +77,6 @@ export default StyleSheet.create({
   contentContainerStyle: {
 
     flexGrow: 1,
-    justifyContent: 'flex-end',
   },
 
   subItemContentContainer: {

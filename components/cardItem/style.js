@@ -34,7 +34,6 @@ export default StyleSheet.create({
   },
 
   cardItemContentTopBar: {
-    flex: 8,
     flexDirection: "row",
     marginLeft: 15,
     marginRight: 10,
@@ -42,7 +41,6 @@ export default StyleSheet.create({
   },
 
   cardItemContentTopDesc: {
-    flex: 7,
   },
 
   cardItemContentTopText: {
