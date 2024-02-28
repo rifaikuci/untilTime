@@ -48,6 +48,11 @@ const Root = () => {
         drawerLabel:"Tüm rutinleri göster",
         drawerLabelStyle: {  fontWeight: '500' }
       }}  />
+
+      <Drawer.Screen name="AddRoutine" component={AddRoutine} options={{
+        drawerLabel:"Yeni Bir Rutin Ekle",
+        drawerLabelStyle: {  fontWeight: '500' }
+      }}  />
     </Drawer.Navigator>
   );
 }

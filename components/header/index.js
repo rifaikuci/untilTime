@@ -12,7 +12,7 @@ const Header = ({title, goBack = false, navigation}) => {
         goBack &&
         <View style={style.headerBackIconContent}>
           <TouchableOpacity onPress={()=> {navigation.goBack()} }>
-            <Icon name="arrow-left" size={25} color={COLORS.primary} />
+            <Icon name="arrow-left" size={30} color={COLORS.primary} />
           </TouchableOpacity>
         </View>
       }

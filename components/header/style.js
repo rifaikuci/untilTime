@@ -8,7 +8,6 @@ export default StyleSheet.create({
   },
 
   headerBackIconContent: {
-    flex: 1,
   },
 
   headerContentText: {
