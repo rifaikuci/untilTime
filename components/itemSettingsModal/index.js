@@ -5,7 +5,14 @@ import Modal from "react-native-modal";
 import { COLORS } from "../../constants/theme";
 import Icon from "react-native-vector-icons/AntDesign";
 
-const ItemSettingsModal = ({ isModalVisible, setModalVisible, handleDelete, handleMainPage, selectedItem, handleUpdate }) => {
+const ItemSettingsModal = ({ isModalVisible, setModalVisible, handleDelete, handleMainPage, selectedItem, handleUpdate, navigation }) => {
+
+
+  const  handleDetail = () => {
+    navigation.navigate("DetailRoutine", {...selectedItem} )
+    setModalVisible(false);
+
+  }
 
   return (
 
@@ -37,7 +44,7 @@ const ItemSettingsModal = ({ isModalVisible, setModalVisible, handleDelete, hand
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={()=> console.log("anA")}>
+          <TouchableOpacity onPress={handleDetail}>
           <View style={style.choosenItem}>
             <Text style={style.choosenItemText}>
               Rutininizi inceleyin

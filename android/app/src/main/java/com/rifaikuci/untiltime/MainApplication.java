@@ -1,4 +1,4 @@
-package com.untiltime;
+package com.rifaikuci.untiltime;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

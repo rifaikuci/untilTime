@@ -10,7 +10,7 @@ import { ItemSettingsModal } from "../index";
 const CardItem = ({
                     item, handleDelete, handleMainPage,isModalVisible,
                     setModalVisible, selectedItem, handleUpdate,
-                    handlePlay, handleSave, settingsView=true, isDetail = false }) => {
+                    handlePlay, handleSave, navigation, settingsView=true, isDetail = false }) => {
 
 
   const [timer, setTimer] = useState(item.totalSeconds ? item.totalSeconds : "0");
@@ -49,6 +49,7 @@ const CardItem = ({
 
       {
             <ItemSettingsModal
+              navigation={navigation}
               handleDelete={handleDelete}
               handleMainPage={handleMainPage}
               handleUpdate={handleUpdate}

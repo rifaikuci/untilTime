@@ -255,6 +255,7 @@ const DetailRoutine = (props) => {
 
         <View style={style.cardItemContainer}>
           <CardItem
+            navigation={props.navigation}
             isDetail={true}
             settingsView={false}
             item={{ title: title ,totalSeconds: totalSeconds, active: active }}

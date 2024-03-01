@@ -165,6 +165,7 @@ const Index = (props) => {
                   <TouchableOpacity key={index} onPress={()=> handleDetail(x)}>
 
                     <CardItem
+                      navigation={props.navigation}
                       isModalVisible={isModalVisible}
                       setModalVisible={setModalVisible}
                       selectedItem={selectedItem}

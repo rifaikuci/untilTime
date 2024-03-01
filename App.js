@@ -14,23 +14,6 @@ import { getDeviceInfo } from "./util/deviceInfo";
 import axios from 'axios';
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
-axios.defaults.baseURL = "https://rifaikuci.com/sabish/";
-axios.defaults.withCredentials = true;
-axios.defaults.headers = {
-  'X-Parse-Application-Id': 'LkGs9nAHLHxFk23S',
-  'Cache-Control': 'no-cache',
-  'Pragma': 'no-cache',
-  'Expires': '0'
-};
-
-
-getDeviceInfo().then(deviceInfo => {
-
-
-
-}).catch()
-
-
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();

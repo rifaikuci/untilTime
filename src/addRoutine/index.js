@@ -4,40 +4,45 @@ import { Alert, SafeAreaView, TextInput, View } from "react-native";
 import { Header, InputCheckbox, InputText, Loading, UcButton } from "../../components";
 import React, { useEffect, useRef, useState } from "react";
 import createWebClient from "../../webClient";
+import { useFocusEffect } from "@react-navigation/native";
 
 const AddRoutine = (props) => {
-  const title = useRef("");
   const mainPage = useRef(props.route && props.route.params && props.route.params.mainPage == 0  ? false : true);
   const isLoading = useRef(false);
   const [refresh, setRefresh] = useState(false);
+  const [title, setTitle] = useState("");
 
   const routineId = props.route?.params?.routineId;
   const deviceId = props.route?.params?.deviceId;
 
 
-  useEffect( () => {
-      const fetchData = async  () => {
-        if (routineId) {
-          try {
-            isLoading.current = true;
-            const WebClient = await createWebClient();
 
-            const response = await WebClient.post("", {
-              method: "getRoutineId",
-              routineId: routineId
-            });
-            title.current = response.data.title;
-          } catch (error) {
-            console.error("Error using WebClient:", error);
-          } finally {
-            isLoading.current = false;
-            setRefresh(!refresh);
-          }
-        }
-      }
-
+  useFocusEffect(
+    React.useCallback(() => {
       fetchData().then(()=> {})
-  }, []);
+    }, [props.route]),
+  );
+
+  const fetchData = async  () => {
+    if (routineId) {
+      try {
+        isLoading.current = true;
+        const WebClient = await createWebClient();
+
+        const response = await WebClient.post("", {
+          method: "getRoutineId",
+          routineId: routineId
+        });
+        setTitle(response.data.title);
+      } catch (error) {
+        console.error("Error using WebClient:", error);
+      } finally {
+        isLoading.current = false;
+        setRefresh(!refresh);
+      }
+    }
+  }
+
 
 
   if (isLoading.current) {
@@ -45,8 +50,7 @@ const AddRoutine = (props) => {
   }
 
   const handleTitleChange = (text) => {
-    title.current = text;
-    setRefresh(!refresh);
+    setTitle(text);
   };
 
   const handleCheckboxChange = (isChecked) => {
@@ -56,7 +60,7 @@ const AddRoutine = (props) => {
 
 
   const handleSubmit = async () => {
-    if (title.current) {
+    if (title) {
       try {
 
         isLoading.current = true;
@@ -64,7 +68,7 @@ const AddRoutine = (props) => {
 
         const response = await WebClient.post("", {
           method: "saveRoutines",
-          title: title.current,
+          title: title,
           isMainPage: mainPage.current ? 1 : 0,
         });
 
@@ -106,7 +110,7 @@ const AddRoutine = (props) => {
 
 
   const handleUpdate = async () => {
-    if (title.current) {
+    if (title) {
       try {
 
         isLoading.current = true;
@@ -114,7 +118,7 @@ const AddRoutine = (props) => {
 
         const response = await WebClient.post("", {
           method: "updateRoutine",
-          title: title.current,
+          title: title,
           isMainPage: mainPage.current ? 1 : 0,
           routineId : routineId
         });
@@ -156,7 +160,7 @@ const AddRoutine = (props) => {
   };
 
   const handleDelete = async () => {
-    if (title.current) {
+    if (title) {
       try {
 
         isLoading.current = true;
@@ -211,7 +215,7 @@ const AddRoutine = (props) => {
       <View style={style.inputContent}>
         <InputText
           placeHolderText={"Rutin giriniz..."}
-          value={title.current}
+          value={title}
           onChangeText={handleTitleChange}
         />
       </View>
