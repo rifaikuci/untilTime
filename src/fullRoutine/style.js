@@ -29,7 +29,7 @@ export default StyleSheet.create({
     borderWidth: 1.5,
     marginVertical: 5,
     borderRadius: 5,
-    height: SIZES.height / 5,
+    height: SIZES.height / 4,
 
   },
 

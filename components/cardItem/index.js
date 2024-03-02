@@ -1,124 +1,94 @@
+import React, { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import style from "./style";
-import React, { useEffect, useRef, useState } from "react";
-import { showTimer, timeConvertSecond } from "../../util/helper";
 import Icon from "react-native-vector-icons/Entypo";
+import style from "./style";
+import { showTimer } from "../../util/helper";
 import { COLORS } from "../../constants/theme";
 import { ItemSettingsModal } from "../index";
 
-
 const CardItem = ({
-                    item, handleDelete, handleMainPage,isModalVisible,
-                    setModalVisible, selectedItem, handleUpdate,
-                    handlePlay, handleSave, navigation, settingsView=true, isDetail = false }) => {
-
-
-  const [timer, setTimer] = useState(item.totalSeconds ? item.totalSeconds : "0");
-  const [timerString,setTimerString] = useState( item.totalSeconds ? showTimer(item.totalSeconds) : showTimer(0));
+                    item,
+                    handleDelete,
+                    handleMainPage,
+                    isModalVisible,
+                    setModalVisible,
+                    selectedItem,
+                    handleUpdate,
+                    handlePlay,
+                    handleSave,
+                    navigation,
+                    settingsView = true,
+                    isDetail = false,
+                  }) => {
+  const [timer, setTimer] = useState(item.totalSeconds || 0);
+  const [timerString, setTimerString] = useState(showTimer(item.totalSeconds || 0));
 
   useEffect(() => {
-
     if (item.active) {
-
-      let totalSeconds = timer;
       const intervalId = setInterval(() => {
-          totalSeconds++;
-          setTimer(totalSeconds)
-          const formattedTimer = showTimer(totalSeconds);
-          setTimerString(formattedTimer);
-
+        setTimer((prevTimer) => prevTimer + 1);
+        setTimerString(showTimer(timer + 1));
       }, 1000);
 
       return () => clearInterval(intervalId);
-    } else if(isDetail) {
-      const formattedTimer = showTimer(timer);
-      setTimerString(formattedTimer);
+    } else if (isDetail) {
+      setTimerString(showTimer(timer));
     } else {
-      setTimer(0)
-      const formattedTimer = showTimer(0);
-      setTimerString(formattedTimer);
+      setTimer(0);
+      setTimerString(showTimer(0));
     }
-
-
-
-  }, [item.active]);
+  }, [item.active, timer, isDetail]);
 
   return (
-
     <View style={style.cardItemContainer}>
-
-      {
-            <ItemSettingsModal
-              navigation={navigation}
-              handleDelete={handleDelete}
-              handleMainPage={handleMainPage}
-              handleUpdate={handleUpdate}
-              isModalVisible={isModalVisible}
-              setModalVisible={setModalVisible}
-              selectedItem={selectedItem ? selectedItem.current : null}
-            />
-      }
-
+      {isModalVisible && (
+        <ItemSettingsModal
+          navigation={navigation}
+          handleDelete={handleDelete}
+          handleMainPage={handleMainPage}
+          handleUpdate={handleUpdate}
+          isModalVisible={isModalVisible}
+          setModalVisible={setModalVisible}
+          selectedItem={selectedItem ? selectedItem.current : null}
+        />
+      )}
 
       <View style={style.cardItemContentTopBar}>
-
         <View style={style.cardItemContentTopDesc}>
-          <Text style={style.cardItemContentTopText}>
-            {item.title}
-          </Text>
+          <Text style={style.cardItemContentTopText}>{item.title}</Text>
         </View>
-
-        {
-          settingsView ?
-            <TouchableOpacity style={style.cardItemContentTopIcon} onPress={() => {
-
-              selectedItem.current = item
-              setModalVisible(true)}
-            }
-            >
-              <Icon name="dots-three-vertical" size={20} color={COLORS.secondary} />
-            </TouchableOpacity> : null
-        }
-
+        {settingsView && (
+          <TouchableOpacity
+            style={style.cardItemContentTopIcon}
+            onPress={() => {
+              selectedItem.current = item;
+              setModalVisible(true);
+            }}
+          >
+            <Icon name="dots-three-vertical" size={20} color={COLORS.secondary} />
+          </TouchableOpacity>
+        )}
       </View>
 
       <View style={style.cardItemTimerView}>
-        <Text style={style.cardItemTimerText}>
-          {timerString}
-        </Text>
+        <Text style={style.cardItemTimerText}>{timerString}</Text>
       </View>
 
       <View style={style.iconContainer}>
-
-        {
-          !item.active &&
+        {!item.active && (
           <TouchableOpacity onPress={() => handlePlay(item)}>
-            <Icon
-              name="controller-play"
-              size={40}
-              color={COLORS.secondary}
-              style={style.iconItem}
-            />
+            <Icon name="controller-play" size={40} color={COLORS.secondary} style={style.iconItem} />
           </TouchableOpacity>
+        )}
 
-        }
-
-        {
-          item.active &&
-          <TouchableOpacity onPress={()=>handleSave(item)}>
-            <Icon
-              name="check"
-              size={40}
-              color={COLORS.secondary}
-              style={style.iconItem}
-            />
+        {item.active && (
+          <TouchableOpacity onPress={() => handleSave(item)}>
+            <Icon name="check" size={40} color={COLORS.secondary} style={style.iconItem} />
           </TouchableOpacity>
-        }
-
+        )}
       </View>
-
-
-    </View>);
+    </View>
+  );
 };
 
 export default CardItem;

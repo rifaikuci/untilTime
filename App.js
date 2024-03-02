@@ -1,12 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React, { useEffect, useState } from "react";
-
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { AddRoutine, DetailRoutine, FullRoutine, Home } from "./src";
@@ -14,32 +6,18 @@ import { getDeviceInfo } from "./util/deviceInfo";
 import axios from 'axios';
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
-
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-
-
 const Root = () => {
   return (
-    <Drawer.Navigator screenOptions={{ headerShown: false}}>
-      <Drawer.Screen name="Home" component={Home} options={{
-        drawerLabel:"Ana sayfa",
-        drawerLabelStyle: {  fontWeight: '500' }
-      }}  />
-      <Drawer.Screen name="FullRoutine" component={FullRoutine} options={{
-        drawerLabel:"Tüm rutinleri göster",
-        drawerLabelStyle: {  fontWeight: '500' }
-      }}  />
-
-      <Drawer.Screen name="AddRoutine" component={AddRoutine} options={{
-        drawerLabel:"Yeni Bir Rutin Ekle",
-        drawerLabelStyle: {  fontWeight: '500' }
-      }}  />
+    <Drawer.Navigator screenOptions={{ headerShown: false }}>
+      <Drawer.Screen name="Home" component={Home} options={{ drawerLabel: "Ana sayfa", drawerLabelStyle: { fontWeight: '500' } }} />
+      <Drawer.Screen name="FullRoutine" component={FullRoutine} options={{ drawerLabel: "Tüm rutinleri göster", drawerLabelStyle: { fontWeight: '500' } }} />
+      <Drawer.Screen name="AddRoutine" component={AddRoutine} options={{ drawerLabel: "Yeni Bir Rutin Ekle", drawerLabelStyle: { fontWeight: '500' } }} />
     </Drawer.Navigator>
   );
 }
-
 
 function App() {
   const [isDeviceInfoLoaded, setIsDeviceInfoLoaded] = useState(false);
@@ -51,15 +29,17 @@ function App() {
 
         // Eğer deviceID başarıyla alındıysa
         if (deviceInfo.deviceID) {
-          axios.defaults.headers['device-id'] = deviceInfo.deviceID;
-          axios.defaults.headers['app-version'] = deviceInfo.appVersion;
-          axios.defaults.headers['user-agent'] = deviceInfo.userAgent;
-          axios.defaults.headers['device-key'] = deviceInfo.deviceID;
-          axios.defaults.headers['platform'] = deviceInfo.systemName;
-          axios.defaults.headers['platform-version'] = deviceInfo.systemVersion;
-          axios.defaults.headers['brand-model'] = `${deviceInfo.deviceManufacturer}-${deviceInfo.model}`;
-          axios.defaults.headers['X-Forwarded-For'] = deviceInfo.ip;
-          axios.defaults.headers['mac-address'] = deviceInfo.macAddress;
+          axios.defaults.headers = {
+            'device-id': deviceInfo.deviceID,
+            'app-version': deviceInfo.appVersion,
+            'user-agent': deviceInfo.userAgent,
+            'device-key': deviceInfo.deviceID,
+            'platform': deviceInfo.systemName,
+            'platform-version': deviceInfo.systemVersion,
+            'brand-model': `${deviceInfo.deviceManufacturer}-${deviceInfo.model}`,
+            'X-Forwarded-For': deviceInfo.ip,
+            'mac-address': deviceInfo.macAddress,
+          };
 
           setIsDeviceInfoLoaded(true);
         } else {
@@ -70,11 +50,13 @@ function App() {
       }
     };
 
-    initializeApp().then(()=> {});
-  }, []); // Sadece ilk render için çalıştır
+    // Sadece ilk render için çalıştır
+    initializeApp().then(() => {});
+  }, []);
 
   if (!isDeviceInfoLoaded) {
-    return null; // ya da başka bir yükleme ekranı görüntüleyebilirsiniz
+    // Başka bir yükleme ekranı görüntüleme ya da alternatif bir işlem yapabilirsiniz
+    return null;
   }
 
   return (
@@ -85,18 +67,12 @@ function App() {
         }}
         initialRouteName={"Home"}
       >
-        <Stack.Screen
-          name="Root"
-          component={Root}
-          options={{ headerShown: false }}
-        />
+        <Stack.Screen name="Root" component={Root} />
         <Stack.Screen name={"AddRoutine"} component={AddRoutine} />
         <Stack.Screen name={"DetailRoutine"} component={DetailRoutine} />
       </Stack.Navigator>
     </NavigationContainer>
-
   );
 }
-
 
 export default App;

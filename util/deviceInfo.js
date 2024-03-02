@@ -11,10 +11,13 @@ export const getDeviceInfo = async () => {
   catch (e) { }
 
   const [deviceType, appName, appIdentifier, deviceManufacturer, deviceBrand, model, deviceID, systemName, systemVersion, deviceName, userAgent, version, ip, macAddress] =
-    await Promise.all([DeviceInfo.getDeviceType(), DeviceInfo.getApplicationName(),
-    DeviceInfo.getBundleId(), DeviceInfo.getManufacturer(), DeviceInfo.getDeviceId(), DeviceInfo.getModel(), getUniqueId(),
+    await Promise.all(
+      [DeviceInfo.getDeviceType(), DeviceInfo.getApplicationName(),
+    DeviceInfo.getBundleId(), DeviceInfo.getManufacturer(), DeviceInfo.getDeviceId(), DeviceInfo.getModel(),
+        getUniqueId(),
     DeviceInfo.getSystemName(), DeviceInfo.getSystemVersion(), DeviceInfo.getDeviceName(),
     DeviceInfo.getUserAgent(), DeviceInfo.getVersion(), DeviceInfo.getMacAddress()]);
+  const uniqueId = await DeviceInfo.getUniqueId();
 
   deviceInfo = {
     deviceToken: deviceToken,

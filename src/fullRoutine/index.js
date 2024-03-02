@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
-
 import style from "./style";
 import MainTop from "./mainTop";
 import AddCardItem from "./addCardItem";
@@ -8,9 +7,7 @@ import createWebClient from "../../webClient";
 import { CardItem, Loading } from "../../components";
 import { useFocusEffect } from "@react-navigation/native";
 
-
 const FullRoutine = (props) => {
-
   const routines = useRef([]);
   const deviceInfo = useRef({});
   const [isModalVisible, setModalVisible] = useState(false);
@@ -23,6 +20,7 @@ const FullRoutine = (props) => {
 
 
   const [isLoading, setIsLoading] = useState(false);
+
   const useWebClient = async () => {
     try {
       setIsLoading(true);
@@ -47,19 +45,15 @@ const FullRoutine = (props) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      useWebClient().then((r) => {
-      });
-
+      useWebClient().then(() => {});
     }, []),
   );
-
 
   if (isLoading) {
     return <Loading />;
   }
 
   const handleDelete = async (routineId) => {
-
     const WebClient = await createWebClient();
 
     const responseDelete = await WebClient.post("", {
@@ -79,7 +73,6 @@ const FullRoutine = (props) => {
   };
 
   const handleUpdateMainPage = async (routineId) => {
-
     const WebClient = await createWebClient();
 
     const responseUpdate = await WebClient.post("", {
@@ -108,8 +101,6 @@ const FullRoutine = (props) => {
   };
 
   const handlePlay = async (item) => {
-
-
     const WebClient = await createWebClient();
 
     const responseStart = await WebClient.post("", {
@@ -119,15 +110,13 @@ const FullRoutine = (props) => {
     });
 
     if (deviceInfo.current && responseStart.data.success) {
-      routines.current.find(x => x.id === item.id).active = true;
-      routines.current.find(x => x.id === item.id).routineTimesId = responseStart.data.routineTimesId;
+      routines.current.find((x) => x.id === item.id).active = true;
+      routines.current.find((x) => x.id === item.id).routineTimesId = responseStart.data.routineTimesId;
       setRefresh(!refresh);
     }
   };
 
-
   const handleSave = async (item) => {
-
     const WebClient = await createWebClient();
 
     const responseStart = await WebClient.post("", {
@@ -138,18 +127,15 @@ const FullRoutine = (props) => {
     });
 
     if (deviceInfo.current && responseStart.data.success) {
-      routines.current.find(x => x.id === item.id).totalSeconds = 0;
-      routines.current.find(x => x.id === item.id).active = false;
+      routines.current.find((x) => x.id === item.id).totalSeconds = 0;
+      routines.current.find((x) => x.id === item.id).active = false;
       setRefresh(!refresh);
     }
-
   };
 
-  const  handleDetail = (x) => {
-    props.navigation.navigate("DetailRoutine", {...x} )
-
-  }
-
+  const handleDetail = (x) => {
+    props.navigation.navigate("DetailRoutine", { ...x });
+  };
 
   return (
     <SafeAreaView>
@@ -158,42 +144,32 @@ const FullRoutine = (props) => {
 
         <View style={style.cardListContainer}>
           <ScrollView showsVerticalScrollIndicator={false}>
-
-            {
-              routines.current.map((x, index) => {
-                return (
-                  <TouchableOpacity key={index} onPress={()=> handleDetail(x)}>
-
-                    <CardItem
-                      navigation={props.navigation}
-                      isModalVisible={isModalVisible}
-                      setModalVisible={setModalVisible}
-                      selectedItem={selectedItem}
-                      item={x}
-                      key={index}
-                      handleDelete={handleDelete}
-                      handleMainPage={handleUpdateMainPage}
-                      handleUpdate={handleUpdate}
-                      handlePlay={handlePlay}
-                      handleSave={handleSave}
-                    />
-                  </TouchableOpacity>
-
-                );
-              })
-            }
+            {routines.current.map((x, index) => {
+              return (
+                <TouchableOpacity key={index} onPress={() => handleDetail(x)}>
+                  <CardItem
+                    navigation={props.navigation}
+                    isModalVisible={isModalVisible}
+                    setModalVisible={setModalVisible}
+                    selectedItem={selectedItem}
+                    item={x}
+                    key={index}
+                    handleDelete={handleDelete}
+                    handleMainPage={handleUpdateMainPage}
+                    handleUpdate={handleUpdate}
+                    handlePlay={handlePlay}
+                    handleSave={handleSave}
+                  />
+                </TouchableOpacity>
+              );
+            })}
 
             <AddCardItem title={"Yeni bir rutin ekleyin"} handleAddItem={handleAddItem} />
           </ScrollView>
-
         </View>
-
       </View>
     </SafeAreaView>
-
-
   );
 };
-
 
 export default FullRoutine;
