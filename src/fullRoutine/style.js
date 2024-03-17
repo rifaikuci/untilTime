@@ -8,7 +8,7 @@ export default StyleSheet.create({
 
   cardListContainer: {
     marginTop: 5,
-    marginBottom: SIZES.height / 10,
+    marginBottom: SIZES.height / 5,
     flexDirection: "column",
   },
 

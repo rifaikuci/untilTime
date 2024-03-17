@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
 import style from "./style";
-import MainTop from "./mainTop";
 import AddCardItem from "./addCardItem";
 import createWebClient from "../../webClient";
-import { CardItem, Loading } from "../../components";
+import { CardItem, Header, Loading } from "../../components";
 import { useFocusEffect } from "@react-navigation/native";
 
 const Index = (props) => {
@@ -140,8 +139,9 @@ const Index = (props) => {
   return (
     <SafeAreaView>
       <View style={style.topViewContainer}>
-        <MainTop />
-
+        <View style={style.topViewContainer}>
+          <Header goBack={false} title={"Rutinler"} navigation={props.navigation} />
+        </View>
         <View style={style.cardListContainer}>
           <ScrollView showsVerticalScrollIndicator={false}>
             {routines.current.map((x, index) => {
